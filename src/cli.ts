@@ -1,13 +1,11 @@
-import inquirer from 'inquirer';
 import chalk from 'chalk';
-import { createAngularApp } from './steps/create-angular-app.js';
-import { addTailwind } from './steps/add-tailwind.js';
-import { addVitest } from './steps/add-vitest.js';
-import { addJest } from './steps/add-jest.js';
-import { addTestingLibrary } from './steps/add-testing-library.js';
+import inquirer from 'inquirer';
+import { addAIEditorConfig } from './steps/add-ai-editor-config.js';
 import { addESLint } from './steps/add-eslint.js';
 import { addHusky } from './steps/add-husky.js';
-import { addAIEditorConfig } from './steps/add-ai-editor-config.js';
+import { addJest } from './steps/add-jest.js';
+import { addTestingLibrary } from './steps/add-testing-library.js';
+import { createAngularApp } from './steps/create-angular-app.js';
 import type { UserAnswers } from './types.js';
 
 async function promptUser(): Promise<UserAnswers> {
@@ -108,11 +106,6 @@ async function run(): Promise<void> {
 
     // Paso 2: Aplicar features opcionales
     const steps = [
-      { condition: answers.styles === 'tailwind', step: () => addTailwind(projectRoot, answers) },
-      {
-        condition: answers.testRunner === 'vitest',
-        step: () => addVitest(projectRoot, answers),
-      },
       {
         condition: answers.testRunner === 'jest',
         step: () => addJest(projectRoot, answers),
