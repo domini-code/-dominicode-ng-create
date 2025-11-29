@@ -1,7 +1,7 @@
 export interface UserAnswers {
   projectName: string;
   packageManager: 'npm' | 'pnpm' | 'yarn' | 'bun';
-  packageManagerCmd?: string; // Comando ejecutable (ej: "yarn" o "npx yarn")
+  packageManagerCmd?: string;
   projectType: 'spa' | 'ssr';
   styles: 'css' | 'scss' | 'tailwind';
   testRunner: 'jest' | 'vitest' | 'none';
