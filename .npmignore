@@ -1,0 +1,41 @@
+# Archivos fuente TypeScript
+src/
+*.ts
+!*.d.ts
+
+# Archivos de desarrollo
+.vscode/
+.idea/
+*.log
+*.swp
+*.swo
+*~
+
+# Tests - excluir archivos de test compilados
+dist/**/*.spec.js
+dist/**/*.spec.d.ts
+dist/**/*.spec.js.map
+dist/**/*.spec.d.ts.map
+dist/**/*.test.js
+dist/**/*.test.d.ts
+dist/**/*.test.js.map
+dist/**/*.test.d.ts.map
+*.spec.ts
+*.test.ts
+vitest.config.ts
+
+# Archivos de configuración de desarrollo
+tsconfig.json
+.git/
+.gitignore
+.github/
+
+# Archivos de documentación de desarrollo
+QUICKSTART.md
+
+# Archivos temporales
+.DS_Store
+Thumbs.db
+
+# Node modules (ya se excluyen por defecto, pero por si acaso)
+node_modules/
