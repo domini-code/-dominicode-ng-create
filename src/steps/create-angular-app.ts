@@ -12,7 +12,7 @@ export async function createAngularApp(
   answers: UserAnswers,
   projectRoot: string
 ): Promise<void> {
-  const { projectName, projectType, styles } = answers;
+  const { projectName, projectType, styles, packageManager } = answers;
 
   // Construir comando ng new
   // Angular CLI v18+ soporta nativamente --style=tailwind
@@ -20,7 +20,7 @@ export async function createAngularApp(
     projectName,
     '--skip-git',
     '--skip-install',
-    '--package-manager=npm',
+    `--package-manager=${packageManager}`,
     `--style=${styles}`,
     '--routing',
     '--standalone',

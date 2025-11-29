@@ -28,6 +28,18 @@ async function promptUser(): Promise<UserAnswers> {
     },
     {
       type: 'list',
+      name: 'packageManager',
+      message: 'Which package manager do you want to use?',
+      choices: [
+        { name: 'npm', value: 'npm' },
+        { name: 'pnpm', value: 'pnpm' },
+        { name: 'yarn', value: 'yarn' },
+        { name: 'bun', value: 'bun' },
+      ],
+      default: 'npm',
+    },
+    {
+      type: 'list',
       name: 'projectType',
       message: 'What type of project do you want to create?',
       choices: [
@@ -92,8 +104,19 @@ async function promptUser(): Promise<UserAnswers> {
   return answers;
 }
 
+import { runCommand } from './utils/run-command.js';
+
 async function run(): Promise<void> {
   try {
+    // Validar versión de Node
+    const nodeVersion = process.version;
+    const majorVersion = parseInt(nodeVersion.substring(1).split('.')[0], 10);
+    
+    if (majorVersion < 20) {
+      console.error(chalk.red(`❌ Node.js v20 or higher is required. Current version: ${nodeVersion}`));
+      process.exit(1);
+    }
+
     const answers = await promptUser();
 
     console.log(chalk.green('\n✅ Configuration received. Generating project...\n'));
@@ -135,11 +158,18 @@ async function run(): Promise<void> {
     }
 
     console.log(chalk.green.bold('\n✨ Project generated successfully!\n'));
+    
+    // Instalar dependencias
+    console.log(chalk.blue(`📦 Installing dependencies with ${answers.packageManager}...`));
+    await runCommand(`${answers.packageManager} install`, { 
+      cwd: `${projectRoot}/${answers.projectName}` 
+    });
+
+    console.log(chalk.green.bold('\n✅ Dependencies installed successfully!\n'));
     console.log(chalk.yellow(`📁 Location: ${projectRoot}/${answers.projectName}\n`));
     console.log(chalk.cyan('Next steps:'));
     console.log(chalk.white(`  cd ${answers.projectName}`));
-    console.log(chalk.white('  npm install'));
-    console.log(chalk.white('  npm start\n'));
+    console.log(chalk.white(`  ${answers.packageManager} start\n`));
   } catch (error) {
     console.error(chalk.red('\n❌ Error generating project:'));
     console.error(error);
