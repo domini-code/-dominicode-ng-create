@@ -1,6 +1,5 @@
-import { readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
 import chalk from 'chalk';
+import { readFileSync, writeFileSync } from 'fs';
 
 /**
  * Lee un archivo JSON y retorna su contenido parseado.
@@ -11,9 +10,14 @@ import chalk from 'chalk';
 export function readJson<T = unknown>(filePath: string): T {
   try {
     const content = readFileSync(filePath, 'utf-8');
-    return JSON.parse(content) as T;
+    // Eliminar comentarios simples (//) y de bloque (/* */) antes de parsear
+    // Nota: Esto es una limpieza básica y puede fallar si hay URLs o strings con // dentro.
+    // Para mayor robustez en el futuro, considerar usar 'jsonc-parser'.
+    const jsonContent = content.replace(/\\"|"(?:\\"|[^"])*"|(\/\/.*|\/\*[\s\S]*?\*\/)/g, (m, g1) => g1 ? "" : m);
+    
+    return JSON.parse(jsonContent) as T;
   } catch (error) {
-    console.error(chalk.red(`Error leyendo ${filePath}:`), error);
+    console.error(chalk.red(`Error reading ${filePath}:`), error);
     throw error;
   }
 }

@@ -7,6 +7,7 @@ import { addJest } from './steps/add-jest.js';
 import { addTestingLibrary } from './steps/add-testing-library.js';
 import { createAngularApp } from './steps/create-angular-app.js';
 import type { UserAnswers } from './types.js';
+import { getPackageManagerCommand } from './utils/package-manager.js';
 
 async function promptUser(): Promise<UserAnswers> {
   console.log(chalk.blue.bold('\n🚀 Angular 21 Project Generator\n'));
@@ -119,6 +120,10 @@ async function run(): Promise<void> {
 
     const answers = await promptUser();
 
+    // Resolve package manager command (use npx if not installed)
+    const pmCmd = await getPackageManagerCommand(answers.packageManager);
+    answers.packageManagerCmd = pmCmd;
+
     console.log(chalk.green('\n✅ Configuration received. Generating project...\n'));
 
     const projectRoot = process.cwd();
@@ -126,6 +131,19 @@ async function run(): Promise<void> {
     // Paso 1: Crear el proyecto Angular base
     console.log(chalk.blue('📦 Creating Angular project...'));
     await createAngularApp(answers, projectRoot);
+
+    // Instalar dependencias iniciales para asegurar que existe lockfile y node_modules
+    // Esto es necesario para que comandos como 'yarn remove' funcionen correctamente
+    console.log(chalk.blue(`📦 Installing initial dependencies with ${answers.packageManager}...`));
+    
+    let installArgs = 'install';
+    if (answers.packageManager === 'npm') {
+      installArgs += ' --legacy-peer-deps';
+    }
+
+    await runCommand(`${answers.packageManagerCmd} ${installArgs}`, { 
+      cwd: `${projectRoot}/${answers.projectName}` 
+    });
 
     // Paso 2: Aplicar features opcionales
     const steps = [
@@ -159,12 +177,6 @@ async function run(): Promise<void> {
 
     console.log(chalk.green.bold('\n✨ Project generated successfully!\n'));
     
-    // Instalar dependencias
-    console.log(chalk.blue(`📦 Installing dependencies with ${answers.packageManager}...`));
-    await runCommand(`${answers.packageManager} install`, { 
-      cwd: `${projectRoot}/${answers.projectName}` 
-    });
-
     console.log(chalk.green.bold('\n✅ Dependencies installed successfully!\n'));
     console.log(chalk.yellow(`📁 Location: ${projectRoot}/${answers.projectName}\n`));
     console.log(chalk.cyan('Next steps:'));

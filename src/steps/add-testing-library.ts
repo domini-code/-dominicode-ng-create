@@ -14,12 +14,17 @@ export async function addTestingLibrary(
   answers: UserAnswers
 ): Promise<void> {
   const projectPath = join(projectRoot, answers.projectName);
+  const pmCmd = answers.packageManagerCmd || answers.packageManager;
+  const pm = answers.packageManager;
 
   console.log(chalk.blue('🧪 Instalando Angular Testing Library...'));
 
   try {
+    const installCmd = pm === 'npm' ? 'install' : 'add';
+    const devFlag = pm === 'npm' ? '-D' : '-D';
+
     await runCommand(
-      'npm install -D @testing-library/angular @testing-library/user-event @testing-library/jest-dom',
+      `${pmCmd} ${installCmd} ${devFlag} @testing-library/angular @testing-library/user-event @testing-library/jest-dom`,
       { cwd: projectPath }
     );
 

@@ -14,14 +14,20 @@ export async function addESLint(
   answers: UserAnswers
 ): Promise<void> {
   const projectPath = join(projectRoot, answers.projectName);
+  const pmCmd = answers.packageManagerCmd || answers.packageManager;
 
   console.log(chalk.blue('🔍 Configurando ESLint...'));
 
   try {
     // Angular CLI ya incluye ESLint por defecto, pero podemos asegurarnos
     // de que esté configurado correctamente
+    // Use pmCmd for execution
+    const pm = answers.packageManager;
+    const installCmd = pm === 'npm' ? 'install' : 'add';
+    const devFlag = pm === 'npm' ? '-D' : '-D'; // consistent across pm for dev
+
     await runCommand(
-      'npm install -D @angular-eslint/eslint-plugin @angular-eslint/template-parser @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint',
+      `${pmCmd} ${installCmd} ${devFlag} @angular-eslint/eslint-plugin @angular-eslint/template-parser @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint`,
       { cwd: projectPath }
     );
 
