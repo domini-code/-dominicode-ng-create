@@ -1,6 +1,6 @@
 {
   "name": "@dominicode/ng-create",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI to generate Angular 21 projects with all modern tools",
   "type": "module",
   "main": "dist/cli.js",
