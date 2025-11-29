@@ -176,7 +176,7 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 **Dominicode**
 
-- GitHub: [@dominicode](https://github.com/dominicode)
+- GitHub: [@dominicode](https://github.com/bezael)
 
 ## 🙏 Acknowledgments
 
